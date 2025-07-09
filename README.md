@@ -2,6 +2,7 @@
 
 Agentic Chunking involves taking a text and organizing its propositions into grouped "chunks." Each chunk is a collection of related propositions that are interconnected, allowing for more efficient processing and retrieval within a RAG system.
 
+This edition builds on the work of Ranjith.
 
 ### How does a human go about chunking a text?
 
