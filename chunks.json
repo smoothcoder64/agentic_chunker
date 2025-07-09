@@ -1,0 +1,56 @@
+{
+    "fa7d8": {
+        "title": "Pipeline Integrity Policies",
+        "summary": "This chunk contains information about policies related to pipeline integrity management and where they apply.",
+        "paragraphs": [
+            "PIPELINE INTEGRITY MANAGEMENT POLICY",
+            "This policy applies to all pipeline operations within high consequence areas as defined in 49 CFR 192.903."
+        ]
+    },
+    "78074": {
+        "title": "Pipeline Integrity & Safety Policy",
+        "summary": "This chunk outlines the procedures, review process, and revision requirements for maintaining pipeline safety and reliability.",
+        "paragraphs": [
+            "1. INTRODUCTION\nThis Pipeline Integrity Management Policy outlines the procedures and requirements for maintaining the safety and reliability of pipeline operations in accordance with 49 CFR Part 192.",
+            "10. REVIEW AND REVISION\n10.1 This policy shall be reviewed annually by the Pipeline Safety Committee.\n10.2 Revisions shall be approved by the Chief Executive Officer."
+        ]
+    },
+    "dc727": {
+        "title": "PIPELINE MANAGEMENT DEFINITIONS",
+        "summary": "This chunk contains definitions of terms related to pipeline management and safety.",
+        "paragraphs": [
+            "3. DEFINITIONS\n3.1 Integrity Management: A systematic approach to evaluating and managing pipeline risks to reduce both the likelihood and consequences of incidents.\n3.2 High Consequence Area (HCA): Areas where pipeline releases could have greater consequences to health, safety, or environment.\n3.3 Cathodic Protection: A technique to control corrosion of metal surfaces by making the metal work as a cathode in an electrochemical cell."
+        ]
+    },
+    "dabd5": {
+        "title": "Pipeline Safety Responsibilities",
+        "summary": "This chunk contains information about the responsibilities of personnel and contractors regarding pipeline safety and regulatory compliance.",
+        "paragraphs": [
+            "4. RESPONSIBILITIES\n4.1 The Pipeline Safety Officer shall ensure compliance with all applicable regulations.\n4.2 All personnel shall report any potential integrity issues immediately to all personnel's supervisor.\n4.3 Contractors shall adhere to this policy when performing work on pipeline facilities."
+        ]
+    },
+    "4a011": {
+        "title": "Pipeline Regulations: Inspection, Risk, & Prevention",
+        "summary": "This chunk contains requirements for pipeline inspections, risk assessment, preventive measures, and documentation.",
+        "paragraphs": [
+            "5. INSPECTION REQUIREMENTS\n5.1 All pipelines within HCAs shall be inspected using in-line inspection tools at intervals not exceeding 5 years.\n5.2 Cathodic protection systems shall be tested annually in accordance with 49 CFR 192.451.\n5.3 Direct assessment methods shall be employed when in-line inspection is not feasible.",
+            "6. RISK ASSESSMENT\n6.1 A comprehensive risk assessment shall be performed annually for all pipeline segments.\n6.2 Risk factors shall include but are not limited to corrosion, third-party damage, manufacturing defects, and environmental factors.",
+            "7. PREVENTIVE AND MITIGATIVE MEASURES\n7.1 Based on risk assessment results, appropriate preventive and mitigative measures shall be implemented.\n7.2 Additional measures shall be considered for HCAs, including increased patrol frequency, emergency response drills, and public awareness programs.",
+            "8. DOCUMENTATION AND RECORD KEEPING\n8.1 All inspection, testing, and maintenance activities shall be documented.\n8.2 Records shall be maintained for the life of the pipeline.\n8.3 Reports shall be submitted to PHMSA as required by applicable regulations."
+        ]
+    },
+    "6eee6": {
+        "title": "Policy Deviation Management",
+        "summary": "This chunk contains information about how the company deals with deviations from policy due to unavoidable circumstances.",
+        "paragraphs": [
+            "9. FORCE MAJEURE\n9.1 In the event of force majeure, the company shall take all reasonable steps to continue compliance with this policy to the extent possible.\n9.2 Any deviations from this policy due to force majeure shall be documented and reported to the appropriate regulatory authorities."
+        ]
+    },
+    "04b7d": {
+        "title": "Official Company Approvals",
+        "summary": "This chunk contains information about official company approvals and dates.",
+        "paragraphs": [
+            "Approved by: John Smith, CEO\nDate: January 15, 2023"
+        ]
+    }
+}

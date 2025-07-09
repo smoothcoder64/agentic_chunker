@@ -4,23 +4,19 @@ from pprint import pprint
 import json
 import google.generativeai as genAI
 import os
+import re
 
-genAI.configure(api_key = os.getenv("GEMINI_API_KEY"))
-llm_model = genAI.GenerativeModel("gemini-1.5-flash")
+genAI.configure(api_key = "AIzaSyBt7d5UiyLXRjyhSDcj1D88jb8sHJK6Z_A")
+llm_model = genAI.GenerativeModel("gemini-2.0-flash")
 
-# First generate the Propositions
-print("----- Propositions -----")
+# Process paragraphs
+print("----- Processing Paragraphs -----")
 
-prompt = """Decompose the "Content" into clear and simple propositions, ensuring they are interpretable out of
-context.
-1. Split compound sentence into simple sentences. Maintain the original phrasing from the input
-whenever possible.
-2. For any named entity that is accompanied by additional descriptive information, separate this
-information into its own distinct proposition.
-3. Decontextualize the proposition by adding necessary modifier to nouns or entire sentences
-and replacing pronouns (e.g., "it", "he", "she", "they", "this", "that") with the full name of the
-entities they refer to.
-4. Present the results as a list of strings., formatted in JSON.
+prompt = """Decontextualize the provided paragraph by replacing pronouns (e.g., "it", "he", "she", "they", "this", "that") 
+with the full name of the entities they refer to. Keep the original paragraph structure intact.
+Do not split into propositions or change the original text beyond pronoun replacement.
+Important: Return ONLY the processed paragraph text as a single string. Do NOT include any explanations, formatting, or metadata.
+Format your output as a simple JSON string (not an array).
 
 Example:
 
@@ -52,22 +48,113 @@ Britain and America."]
 Decompose the following:
 {input}"""
 
-def get_propositions(text):
-    response = llm_model.generate_content(prompt.replace("{input}", text)).text
-    return json.loads(response[8:-5])
+def process_paragraph(text):
+    # Skip empty paragraphs
+    if not text.strip():
+        return ""
+    
+    # Replace prompt with improved one
+    improved_prompt = """Decontextualize the provided paragraph by replacing pronouns (e.g., "it", "he", "she", "they", "this", "that") 
+with the full name of the entities they refer to. Keep the original paragraph structure intact.
+Do not split into propositions or change the original text beyond pronoun replacement.
+Important: Return ONLY the processed paragraph text as a single string. Do NOT include any explanations, formatting, or metadata.
+Format your output as a simple JSON string (not an array).
 
-with open("D:\\agentic_chunking\\Agentic-Chunker\\sample_text_data.txt", "r") as file:
+Example:
+
+Input: The earliest evidence for the Easter Hare (Osterhase) was recorded in south-west Germany in
+1678 by the professor of medicine Georg Franck von Franckenau, but it remained unknown in
+other parts of Germany until the 18th century.
+
+Output: "The earliest evidence for the Easter Hare (Osterhase) was recorded in south-west Germany in
+1678 by the professor of medicine Georg Franck von Franckenau, but the Easter Hare remained unknown in
+other parts of Germany until the 18th century."
+
+Process the following paragraph:
+{input}"""
+    
+    response = llm_model.generate_content(improved_prompt.replace("{input}", text)).text
+    # Print response to debug
+    print(f"Raw response: {response[:100]}...") # Print first 100 chars for debugging
+    
+    # Try to parse the response as JSON
+    try:
+        # Try direct JSON parsing
+        try:
+            parsed_response = json.loads(response)
+            # Ensure we always return a string
+            if isinstance(parsed_response, str):
+                return parsed_response
+            elif isinstance(parsed_response, dict) and any(isinstance(v, str) for v in parsed_response.values()):
+                # If it's a dict with string values, convert to string
+                return str(next((v for v in parsed_response.values() if isinstance(v, str)), str(parsed_response)))
+            elif isinstance(parsed_response, list) and len(parsed_response) > 0:
+                # If it's a list, take the first string item or convert first item to string
+                return str(next((item for item in parsed_response if isinstance(item, str)), str(parsed_response[0])))
+            else:
+                # For any other type, convert to string
+                return str(parsed_response)
+        except:
+            # Look for a JSON string in the response
+            import re
+            # Look for content in quotes that might be JSON
+            json_match = re.search(r'"(.*?)"', response, re.DOTALL)
+            if json_match:
+                # Try to extract the content inside quotes
+                extracted = json_match.group(1).replace('\\"', '"')
+                return extracted
+            # If not found, try to remove code formatting if present
+            code_match = re.search(r'```(?:json)?\s*(.*?)\s*```', response, re.DOTALL)
+            if code_match:
+                content = code_match.group(1)
+                # Try parsing again
+                try:
+                    parsed = json.loads(content)
+                    # Ensure we always return a string
+                    if isinstance(parsed, str):
+                        return parsed
+                    elif isinstance(parsed, dict) and any(isinstance(v, str) for v in parsed.values()):
+                        # If it's a dict with string values, convert to string
+                        return str(next((v for v in parsed.values() if isinstance(v, str)), str(parsed)))
+                    elif isinstance(parsed, list) and len(parsed) > 0:
+                        # If it's a list, take the first string item or convert first item to string
+                        return str(next((item for item in parsed if isinstance(item, str)), str(parsed[0])))
+                    else:
+                        # For any other type, convert to string
+                        return str(parsed)
+                except:
+                    pass
+            
+        # If all parsing attempts fail, return original text with warning
+        print("Warning: Could not parse LLM response as proper JSON, using original text")
+        return text
+    except Exception as e:
+        print(f"Error: {e}")
+        print(f"Problem response: {response}")
+        # Return the original text as fallback
+        return text
+
+with open("D:\\agentic_chunker\\sample_text_data.txt", "r") as file:
     text = file.read()
     
-paragraphs = text.split("\n\n")
-text_propositions = []
+# Split by double newline but filter out empty paragraphs
+paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+print(f"Found {len(paragraphs)} paragraphs in the document")
+
+processed_paragraphs = []
 for i, para in enumerate(paragraphs):
-    propositions = get_propositions(para)
-    text_propositions.extend(propositions)
+    print(f"Processing paragraph {i+1}/{len(paragraphs)}...")
+    processed_para = process_paragraph(para)
+    if processed_para:  # Only add non-empty paragraphs
+        processed_paragraphs.append(processed_para)
     print(f"Done with {i+1}-Paragraph")
 
-print(f"You have {len(text_propositions)} propositions\n")
-pprint(text_propositions[:5])
+print(f"Successfully processed {len(processed_paragraphs)} paragraphs\n")
+if processed_paragraphs:
+    print("Sample of processed paragraphs:")
+    pprint(processed_paragraphs[0])
+    if len(processed_paragraphs) > 1:
+        pprint(processed_paragraphs[1])
 print("\n")
 
 
@@ -75,5 +162,12 @@ print("----- Agentic Chunking ------")
 
 from AgenticChunker import AgenticChunker
 ac = AgenticChunker()
-ac.add_propositions(text_propositions[:4]) # using only 5 propositions for demonstration
+# Process all paragraphs, not just the first few
+ac.add_paragraphs(processed_paragraphs)
+
+# Export chunks to JSON file
+with open("D:\\agentic_chunker\\chunks.json", "w") as json_file:
+    json.dump(ac.get_chunks_for_export(), json_file, indent=4)
+print("Chunks exported to chunks.json")
+
 ac.pretty_print_chunks()
