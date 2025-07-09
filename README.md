@@ -1,4 +1,4 @@
-## AThis edition builds **Who is the "agent" here?** You're correct - it's the LLM acting as a human-like agent!!
+## Agentic Chunker
 
 ### Understand Files
 
